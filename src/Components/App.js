@@ -5,6 +5,7 @@ import { Vacunas } from "../Views/Vacunas";
 import { Fundaciones } from "../Views/Fundaciones";
 import { Adoptantes } from "../Views/Adoptantes";
 import Animales from "../Views/Animales";
+import Inicio from "../Views/Inicio";
 
 class App extends Component {
   render() {
@@ -13,6 +14,7 @@ class App extends Component {
         <Router>
           <NavBar />
           <Routes>
+            <Route path="/Inicio" element={<Inicio />} />
             <Route path="/Vacunas" element={<Vacunas />} />
             <Route path="/Fundaciones" element={<Fundaciones />} />
             <Route path="/Adoptantes" element={<Adoptantes />} />

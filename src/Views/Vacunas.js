@@ -1,6 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { show_alert } from "../functions";
+import DataTable from "react-data-table-component";
+import "./app.css";
+
 
 export const Vacunas = () => {
+  const url = 'https://localhost:7143/api/vacunas';
+  const [vacunas, setVacunas] = useState([]);
+
+  const columns = [
+    {
+      name: 'Nombre de la vacuna',
+      selector: row => row.nombreVacuna,
+      sortable : true
+    },
+    {
+      name: 'Fecha de caducidad',
+      selector: row => row.fechaCaducidad,
+      sortable : true
+    },
+    {
+      name: 'Editar'
+    },
+    {
+      name: 'Eliminar'
+    },
+  ]
+
+  useEffect(() => {
+    const getVacunas = async () => {
+      axios.get(url)
+        .then(res => setVacunas(res.data))
+        .catch(err => console.log(err));
+    }
+    getVacunas();
+  }, []);
+
   return (
     <div>
       <br />
@@ -34,6 +72,8 @@ export const Vacunas = () => {
                   <i class="fa-solid fa-plus"></i>
                   Agregar vacuna
                 </button>
+                <td data-label="Job">
+                </td>
               </div>
             </form>
           </div>
@@ -42,30 +82,18 @@ export const Vacunas = () => {
       <div class="container">
         <h1 class="ui header">Listado de vacunas</h1>
         <hr />
-        <table class="ui celled table">
-          <thead>
-            <tr>
-              <th>Nombre de la vacuna</th>
-              <th>Fecha de caducidad</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td data-label="Name">James</td>
-              <td data-label="Age">24</td>
-              <td data-label="Job">
-                <a href="#" class="ui yellow button">
-                  <i class="fa-solid fa-pen-to-square"></i> Editar
-                </a>
-                <a href="#" class="ui negative button">
-                  <i class="fa-solid fa-trash"></i> Eliminar
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div>
+          <DataTable
+            columns={columns}
+            data={vacunas}
+            pagination
+            selectableRows
+          >
+          </DataTable>
+        </div>
       </div>
     </div>
   );
 };
+
+export default Vacunas
