@@ -5,29 +5,41 @@ import withReactContent from "sweetalert2-react-content";
 import { show_alert } from "../functions";
 import DataTable from "react-data-table-component";
 import "./app.css";
+import { useNavigate } from "react-router-dom";
 
 
 export const Vacunas = () => {
+
   const url = 'https://localhost:7143/api/vacunas';
   const [vacunas, setVacunas] = useState([]);
+  const navegacion  = useNavigate();
+
+  //! Metodo GET
 
   const columns = [
     {
       name: 'Nombre de la vacuna',
+
       selector: row => row.nombreVacuna,
-      sortable : true
+      sortable: true
     },
     {
       name: 'Fecha de caducidad',
       selector: row => row.fechaCaducidad,
-      sortable : true
+      sortable: true
     },
     {
-      name: 'Editar'
+      name: 'Editar',
+      cell: row => (
+        <button class="ui button" onClick={() => handleEdit(row)}>Editar Vacuna</button>
+      )
     },
     {
-      name: 'Eliminar'
-    },
+      name: 'Eliminar',
+      cell: row => (
+        <button class="ui button" onClick={() => handleDelete(row)}>Eliminar vacuna</button>
+      )
+    }
   ]
 
   useEffect(() => {
@@ -39,6 +51,44 @@ export const Vacunas = () => {
     getVacunas();
   }, []);
 
+  //! Metodo POST
+  const data = {nombreVacuna: "", fechaCaducidad : ""}; 
+  const [vacunasEnvio, setVacunasEnvio] = useState(data);
+
+  const entradaDatos = (event)=>{
+    setVacunasEnvio({...vacunasEnvio, [event.target.name]: event.target.value})
+  }
+
+  function salidaDatos(event) {
+    event.preventDefault()
+    console.log(vacunasEnvio)
+    axios.post(url, vacunasEnvio)
+    .then(Response => console.log(Response))
+    .catch(err => console.log(err))
+  }
+  //! Metodo PUT
+  const handleEdit = (row) => {
+    const vacunaId = row.id;
+    const urlVacunaSeleccionada = `https://localhost:7143/api/vacunas/${vacunaId}`;
+    
+    axios.put(urlVacunaSeleccionada, vacunasEnvio)
+    .then(Response => console.log(Response))
+    .catch(err => console.log(err))   
+  };
+
+  //! Metodo DELETE
+  const handleDelete = (row) => {
+
+    const vacunaId = row.id;
+    const urlVacunaSeleccionada = `https://localhost:7143/api/vacunas/${vacunaId}`;
+
+      axios.delete(urlVacunaSeleccionada)
+      .then(response => {
+          console.log(response.data);
+      })
+      .catch(err => console.log(err))
+  };
+
   return (
     <div>
       <br />
@@ -46,29 +96,32 @@ export const Vacunas = () => {
         <div class="content">
           <div class="center aligned header">Agrega tus vacunas</div>
           <div class="center aligned description">
-            <form class="ui form">
+            <form class="ui form" onSubmit={salidaDatos}>
               <div class="field">
                 <div class="two fields">
                   <div class="field">
                     <label>Nombre de la vacuna</label>
                     <input
                       type="text"
-                      name="shipping[last-name]"
+                      name="nombreVacuna"
                       placeholder="Nombre de la vacuna"
+                      onChange={entradaDatos}
+                      value={vacunasEnvio.nombreVacuna}
                     />
                   </div>
                   <div class="field">
                     <label>Fecha de caducidad</label>
                     <input
                       type="date"
-                      name="shipping[last-name]"
-                      placeholder="Last Name"
+                      name="fechaCaducidad"
+                      value={vacunasEnvio.fechaCaducidad}
+                      onChange={entradaDatos}
                     />
                   </div>
                 </div>
               </div>
               <div class="extra content">
-                <button class="ui violet button" type="submit">
+                <button class="ui violet button" type="submit" onClick={salidaDatos}>
                   <i class="fa-solid fa-plus"></i>
                   Agregar vacuna
                 </button>

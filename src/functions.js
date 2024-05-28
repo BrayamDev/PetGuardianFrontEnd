@@ -1,17 +1,9 @@
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+import React from 'react'
 
-export function show_alert(mensaje, icono, foco) {
-    onfocus(foco);
-    const MySwal = withReactContent(Swal);
-    MySwal.fire({
-        title:mensaje,
-        icon:icono
-    })
+const functions = () => {
+  return (
+    <div>functions</div>
+  )
 }
 
-function onfocus(foco) {
-    if (foco !== '') {
-        document.getElementById(foco).focus();
-    }
-}
+export default functions

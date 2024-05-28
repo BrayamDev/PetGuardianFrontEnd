@@ -19,8 +19,13 @@ const Animales = () => {
     },
     {
       name: 'Foto',
-      selector: row => row.imagen,
-      sortable: true
+      selector: row => (
+        <img
+          src={row.imagen} // Asigna la URL de la foto de perfil aquí
+          alt={`Foto de ${row.nombreAdoptante}`}
+          style={{ maxWidth: '100px' }} // Ajusta el tamaño de la imagen según tus necesidades
+        />
+      ),
     },
     {
       name: 'Documentos',
@@ -312,6 +317,7 @@ const Animales = () => {
           selectableRows
         >
         </DataTable>
+        
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ export const Fundaciones = () => {
   const url = 'https://localhost:7143/api/fundaciones';
   const [fundaciones, setFundaciones] = useState([]);
 
+
   const columns = [
     {
       name: 'Nombre Fundacion',
@@ -32,13 +33,21 @@ export const Fundaciones = () => {
       selector: row => row.descripcion,
       sortable: true
     },
-    {
-      name: 'Editar'
-    },
-    {
-      name: 'Eliminar'
-    },
+    // {
+    //   name: 'Editar',
+    //   cell: row => (
+    //     <button onClick={() => handleEdit(row)}>Editar</button>
+    //   )
+    // },
+    // {
+    //   name: 'Eliminar',
+    //   cell: row => (
+    //     <button onClick={() => handleDelete(row)}>Eliminar</button>
+    //   )
+    // }
   ]
+  //! Metodo GET
+
   useEffect(() => {
     const getFundaciones = async () => {
       axios.get(url)
@@ -48,6 +57,24 @@ export const Fundaciones = () => {
     getFundaciones();
   }, []);
 
+  //! Metodo POST
+  const data = { nombreFundacion: "", nit: "", estado: true, descripcion: "" };
+  const [fundacionEnvio, setFundacionEnvio] = useState(data);
+
+
+  const entradaDatos = (event) => {
+    setFundacionEnvio({ ...fundacionEnvio, [event.target.name]: event.target.value })
+  }
+
+
+  function salidaDatos(event) {
+    event.preventDefault()
+    console.log(fundacionEnvio)
+    axios.post(url, fundacionEnvio)
+      .then(Response => console.log(Response))
+      .catch(err => console.log(err))
+  }
+
   return (
     <div>
       <br />
@@ -55,37 +82,48 @@ export const Fundaciones = () => {
         <div class="content">
           <div class="center aligned header">Agregar fundacion</div>
           <div class="center aligned description">
-            <form class="ui form">
+            <form class="ui form" onSubmit={salidaDatos}>
               <div class="field">
                 <div class="two fields">
                   <div class="field">
                     <label>Nombre Fundacion</label>
                     <input
                       type="text"
-                      name="shipping[last-name]"
-                      placeholder="Nombre de la fundacion"
+                      name="nombreFundacion"
+                      placeholder="Nombre de la vacuna"
+                      onChange={entradaDatos}
+                      value={fundacionEnvio.nombreFundacion}
                     />
                   </div>
                   <div class="field">
                     <label>NIT</label>
                     <input
                       type="text"
-                      name="shipping[last-name]"
-                      placeholder="Escribe tu NIT"
+                      name="nit"
+                      placeholder="Nit"
+                      onChange={entradaDatos}
+                      value={fundacionEnvio.nit}
                     />
                   </div>
                   <div class="field">
                     <label>Estado</label>
                     <input
-                      type="checkbox"
-                      name="shipping[last-name]"
-                      placeholder="Escribe tu NIT"
+                      type="text"
+                      name="estado"
+                      onChange={entradaDatos}
+                      value={fundacionEnvio.estado}
                     />
                   </div>
                 </div>
                 <div class="field">
                   <label>Descripcion</label>
-                  <textarea placeholder="Describe tu fundacion" rows="3"></textarea>
+                  <textarea
+                    placeholder="Describe tu fundacion"
+                    type="text"
+                    name="descripcion"
+                    onChange={entradaDatos}
+                    value={fundacionEnvio.descripcion} rows="3"></textarea>
+
                 </div>
               </div>
               <div class="extra content">
@@ -109,7 +147,9 @@ export const Fundaciones = () => {
           pagination
           selectableRows
         >
+
         </DataTable>
+
       </div>
     </div>
   )

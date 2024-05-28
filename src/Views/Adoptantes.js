@@ -34,7 +34,13 @@ export const Adoptantes = () => {
     },
     {
       name: 'Foto de perfil',
-      selector: row => row.foto,
+      selector: row => (
+        <img
+          src={row.foto} // Asigna la URL de la foto de perfil aquí
+          alt={`Foto de ${row.nombreAdoptante}`}
+          style={{ maxWidth: '100px' }} // Ajusta el tamaño de la imagen según tus necesidades
+        />
+      ),
       sortable: true
     }, 
     {
@@ -142,6 +148,8 @@ export const Adoptantes = () => {
           selectableRows
         >
         </DataTable>
+
+
       </div>
     </div>
   )
